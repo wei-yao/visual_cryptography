@@ -177,7 +177,8 @@ public class DecryptFrame extends JFrame implements ActionListener {
             imgClean = Crypting.decryptImage(imgOverlay);
             if (imgClean == null) {
                 JOptionPane.showMessageDialog(this,
-                        "Decryption failed - key and encrypted image not the same size?", "ERROR",
+                        "Decryption failed - key and encrypted image not the same size?",
+                        "ERROR",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }

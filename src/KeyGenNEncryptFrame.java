@@ -129,6 +129,8 @@ public class KeyGenNEncryptFrame extends JFrame implements ActionListener {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
+    BufferedImage imgSrc;
+
     public void actionPerformed(final ActionEvent e) {
         if (e.getActionCommand().equals(btnEncrypt.getText())) {
             if (fSrcFile == null || !fSrcFile.exists()) {
@@ -136,7 +138,7 @@ public class KeyGenNEncryptFrame extends JFrame implements ActionListener {
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            BufferedImage imgSrc = Crypting.loadAndCheckSource(fSrcFile, 0, 0, false);
+            imgSrc = Crypting.loadAndCheckSource(fSrcFile, 0, 0, false);
             if (imgSrc == null) {
                 JOptionPane.showMessageDialog(this, fSrcFile.getName()
                         + " is not fit for encryption", "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -152,6 +154,8 @@ public class KeyGenNEncryptFrame extends JFrame implements ActionListener {
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
+
+            // lblKey.setIcon(new ImageIcon(imgKey));
 
             lblKey.setIcon(new ImageIcon(imgKey));
             lblEnc.setIcon(new ImageIcon(imgEnc));
