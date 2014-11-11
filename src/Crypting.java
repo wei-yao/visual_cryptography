@@ -192,6 +192,14 @@ public class Crypting {
         // raw_image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         // new ColorConvertOp(null).filter(raw_image, imgSrc);
         // }
+        for (int i = 0; i < 100; i += 5) {
+            for (int j = 0; j < 100; j += 5) {
+                Color color = new Color(imgSrc.getRGB(i, j));
+                System.out.println(color.getRed() + " " + color.getGreen() + " " + color.getBlue()
+                        + " " + color.getAlpha());
+
+            }
+        }
         if (imgSrc.getType() != BufferedImage.TYPE_BYTE_BINARY) {
             // BufferedImage raw_image = imgSrc;
             //
@@ -242,16 +250,16 @@ public class Crypting {
             return imgSrc;
         }
         BufferedImage imgSrcRes = new BufferedImage(width, height,
-                BufferedImage.TYPE_INT_ARGB);
+                BufferedImage.TYPE_BYTE_BINARY);
         Graphics2D g = imgSrcRes.createGraphics();
         int x = (width - imgSrc.getWidth()) / 2;
         int y = (height - imgSrc.getHeight()) / 2;
-        g.drawImage(imgSrc, x, y, imgSrc.getWidth() + x, imgSrc.getHeight() +
-                y, 0, 0,
+        g.drawImage(imgSrc, x, y, imgSrc.getWidth() + x,
+                imgSrc.getHeight() +
+                        y, 0, 0,
                 imgSrc.getWidth(), imgSrc.getHeight(), null);
         g.dispose();
-        return imgSrc;
-        // return imgSrcRes;
+        return imgSrcRes;
     }
 
     /**
