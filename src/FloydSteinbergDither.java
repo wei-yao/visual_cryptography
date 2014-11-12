@@ -52,13 +52,13 @@ public class FloydSteinbergDither
      * @param b
      * @return
      */
-    private static byte plus_truncate_uchar(final int a, final int b) {
-        if ((a & 0xff) + b < 0) {
+    private static int plus_truncate_uchar(final int a, final int b) {
+    	if ((a ) + b < 0) {
             return 0;
-        } else if ((a & 0xff) + b > 255) {
-            return (byte) 255;
+        } else if ((a ) + b > 255) {
+            return  255;
         } else {
-            return (byte) (a & 0xff + b);
+            return (a + b);
         }
     }
 
@@ -120,19 +120,28 @@ public class FloydSteinbergDither
                 } else {
                     countW++;
                 }
-//                imgCopy.setRGB(x, y, dstPixel.getRGB());
-                 g.setColor(dstPixel);
-                 g.fillRect(x, y, 1, 1);
-                for (int i = -1; i < 2 && x + i < image.getWidth() && x + i
-                        >= 0; i++) {
-                    for (int j = 0; j < 2 && y + j < image.getHeight(); j++) {
+                imgCopy.setRGB(x, y, dstPixel.getRGB());
+//                 g.setColor(dstPixel);
+//                 g.fillRect(x, y, 1, 1);
+                for (int i = -1; i < 2  ; i++) {
+                    for (int j = 0; j < 2 ; j++) {
                         if (i == -1 && j == 0) {
                             continue;
                         }
                         if (i == 0 && j == 0) {
                             continue;
                         }
-                        byte channels[] = new byte[3];
+                        if(x + i >= image.getWidth()){
+                        	continue;
+                        }
+                        if(x+i<0){
+                        	continue;
+                        }
+                        	
+                        if(y + j >= image.getHeight()){
+                        	continue;
+                        }
+                        int channels[] = new int[3];
                         final int weight = getWeight(i, j);
                         Color targetPixel = new Color(imgCopy.getRGB(x + i, y + j));
                         for (int k = 0; k < 3; k++) {
@@ -213,34 +222,34 @@ public class FloydSteinbergDither
         // }
         // raw_in.close();
 
-        Color[] colors = {
-                new Color(149, 91, 110),
-                new Color(176, 116, 137),
-                new Color(17, 11, 15),
-                new Color(63, 47, 69),
-                new Color(93, 75, 112),
-                new Color(47, 62, 24),
-                new Color(76, 90, 55),
-                new Color(190, 212, 115),
-                new Color(160, 176, 87),
-                new Color(116, 120, 87),
-                new Color(245, 246, 225),
-                new Color(148, 146, 130),
-                new Color(200, 195, 180),
-                new Color(36, 32, 27),
-                new Color(87, 54, 45),
-                new Color(121, 72, 72)
-        };
-//    	Color[] colors = {
-//       		 new Color(  0,   0,   0),
-//       	        new Color(  0,   0, 255),
-//       	        new Color(  0, 255,   0),
-//       	        new Color(  0, 255, 255),
-//       	        new Color(255,   0,   0),
-//       	        new Color(255,   0, 255),
-//       	        new Color(255, 255,   0),
-//       	        new Color(255, 255, 255)
-//       };
+//        Color[] colors = {
+//                new Color(149, 91, 110),
+//                new Color(176, 116, 137),
+//                new Color(17, 11, 15),
+//                new Color(63, 47, 69),
+//                new Color(93, 75, 112),
+//                new Color(47, 62, 24),
+//                new Color(76, 90, 55),
+//                new Color(190, 212, 115),
+//                new Color(160, 176, 87),
+//                new Color(116, 120, 87),
+//                new Color(245, 246, 225),
+//                new Color(148, 146, 130),
+//                new Color(200, 195, 180),
+//                new Color(36, 32, 27),
+//                new Color(87, 54, 45),
+//                new Color(121, 72, 72)
+//        };
+    	Color[] colors = {
+       		 new Color(  0,   0,   0),
+       	        new Color(  0,   0, 255),
+       	        new Color(  0, 255,   0),
+       	        new Color(  0, 255, 255),
+       	        new Color(255,   0,   0),
+       	        new Color(255,   0, 255),
+       	        new Color(255, 255,   0),
+       	        new Color(255, 255, 255)
+       };
         // Color colors[] = {
         // Color.BLACK,
         // Color.WHITE
