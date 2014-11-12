@@ -125,24 +125,33 @@ public class FloydSteinbergDither
         }
 
         // raw_in.close();
-
+//        RGBTriple[] palette = {
+//                new RGBTriple(149, 91, 110),
+//                new RGBTriple(176, 116, 137),
+//                new RGBTriple(17, 11, 15),
+//                new RGBTriple(63, 47, 69),
+//                new RGBTriple(93, 75, 112),
+//                new RGBTriple(47, 62, 24),
+//                new RGBTriple(76, 90, 55),
+//                new RGBTriple(190, 212, 115),
+//                new RGBTriple(160, 176, 87),
+//                new RGBTriple(116, 120, 87),
+//                new RGBTriple(245, 246, 225),
+//                new RGBTriple(148, 146, 130),
+//                new RGBTriple(200, 195, 180),
+//                new RGBTriple(36, 32, 27),
+//                new RGBTriple(87, 54, 45),
+//                new RGBTriple(121, 72, 72)
+//        };
         RGBTriple[] palette = {
-                new RGBTriple(149, 91, 110),
-                new RGBTriple(176, 116, 137),
-                new RGBTriple(17, 11, 15),
-                new RGBTriple(63, 47, 69),
-                new RGBTriple(93, 75, 112),
-                new RGBTriple(47, 62, 24),
-                new RGBTriple(76, 90, 55),
-                new RGBTriple(190, 212, 115),
-                new RGBTriple(160, 176, 87),
-                new RGBTriple(116, 120, 87),
-                new RGBTriple(245, 246, 225),
-                new RGBTriple(148, 146, 130),
-                new RGBTriple(200, 195, 180),
-                new RGBTriple(36, 32, 27),
-                new RGBTriple(87, 54, 45),
-                new RGBTriple(121, 72, 72)
+        		 new RGBTriple(  0,   0,   0),
+        	        new RGBTriple(  0,   0, 255),
+        	        new RGBTriple(  0, 255,   0),
+        	        new RGBTriple(  0, 255, 255),
+        	        new RGBTriple(255,   0,   0),
+        	        new RGBTriple(255,   0, 255),
+        	        new RGBTriple(255, 255,   0),
+        	        new RGBTriple(255, 255, 255)
         };
         BufferedImage output = new BufferedImage(inputImg.getWidth(), inputImg.getHeight(),
                 BufferedImage.TYPE_INT_ARGB);
@@ -152,7 +161,7 @@ public class FloydSteinbergDither
                 RGBTriple rt = palette[result[y][x]];
                 Color color = new Color(rt.channels[0] & 0xff, rt.channels[1] & 0xff,
                         rt.channels[2] & 0xff, 255);
-                output.setRGB(x, y, color.getRed());
+                output.setRGB(x, y, color.getRGB());
                 // image[y][x] = new RGBTriple(color.getRed(), color.getGreen(),
                 // color.getBlue());
                 // raw_in.read(image[y][x].channels, 0, 3);
