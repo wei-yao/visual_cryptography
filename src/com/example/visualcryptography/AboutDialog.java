@@ -1,3 +1,4 @@
+package com.example.visualcryptography;
 import java.awt.Color;
 import java.awt.Font;
 

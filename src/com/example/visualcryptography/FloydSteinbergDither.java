@@ -1,16 +1,19 @@
+
+package com.example.visualcryptography;
+
 /* The authors of this work have released all rights to it and placed it
-in the public domain under the Creative Commons CC0 1.0 waiver
-(http://creativecommons.org/publicdomain/zero/1.0/).
+ in the public domain under the Creative Commons CC0 1.0 waiver
+ (http://creativecommons.org/publicdomain/zero/1.0/).
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-Retrieved from: http://en.literateprograms.org/Floyd-Steinberg_dithering_(Java)?oldid=12476
+ Retrieved from: http://en.literateprograms.org/Floyd-Steinberg_dithering_(Java)?oldid=12476
  */
 
 import java.awt.Color;
@@ -56,7 +59,7 @@ public class FloydSteinbergDither
      * @param b
      * @return
      */
-    private static int plus_truncate_uchar(final int a, final int b) {
+    public static int plus_truncate_uchar(final int a, final int b) {
         if ((a) + b < 0) {
             return 0;
         } else if ((a) + b > 255) {
@@ -125,11 +128,11 @@ public class FloydSteinbergDither
 
                 Color oldPixel = new Color(imgCopy.getRGB(x, y));
                 Color newPixel = findNearestColor(oldPixel);
-                if (newPixel == Color.BLACK) {
-                    count++;
-                } else {
-                    countW++;
-                }
+                // if (newPixel == Color.BLACK) {
+                // count++;
+                // } else {
+                // countW++;
+                // }
                 imgCopy.setRGB(x, y, newPixel.getRGB());
                 // g.setColor(dstPixel);
                 // g.fillRect(x, y, 1, 1);
@@ -140,7 +143,7 @@ public class FloydSteinbergDither
                 diffuseError(imgCopy, new Position(x, y), errors);
             }
         }
-        System.out.println("count " + count + "　" + countW);
+        // System.out.println("count " + count + "　" + countW);
         g.dispose();
         return imgCopy;
     }
@@ -164,7 +167,7 @@ public class FloydSteinbergDither
      * 
      * @author weiyao
      */
-    private static class Position {
+    public static class Position {
         /**
          * x coordinate.
          */
@@ -210,7 +213,7 @@ public class FloydSteinbergDither
      * @param position 正在处理的点的坐标
      * @param errors :r，g，b通道的误差数组.
      */
-    protected void diffuseError(final BufferedImage img, final Position position,
+    public void diffuseError(final BufferedImage img, final Position position,
             final int[] errors) {
         int x = position.getX();
 
