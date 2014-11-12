@@ -67,12 +67,9 @@ public class FloydSteinbergDither
         byte bestIndex = 1;
         for (byte i = 0; i < palette.length; i++) {
 
-            int Rdiff = (color.getRed() & 0xff) - (palette[i].getRed() &
-                    0xff);
-            int Gdiff = (color.getGreen() & 0xff) - (palette[i].getGreen() &
-                    0xff);
-            int Bdiff = (color.getBlue() & 0xff) - (palette[i].getBlue() &
-                    0xff);
+            int Rdiff = (color.getRed() ) - (palette[i].getRed());
+            int Gdiff = (color.getGreen() ) - (palette[i].getGreen() );
+            int Bdiff = (color.getBlue() ) - (palette[i].getBlue() );
             int distanceSquared = Rdiff * Rdiff + Gdiff * Gdiff + Bdiff *
                     Bdiff;
             if (distanceSquared < minDistanceSquared) {
@@ -123,9 +120,9 @@ public class FloydSteinbergDither
                 } else {
                     countW++;
                 }
-                imgCopy.setRGB(x, y, dstPixel.getRGB());
-                // g.setColor(dstPixel);
-                // g.fillRect(x, y, 1, 1);
+//                imgCopy.setRGB(x, y, dstPixel.getRGB());
+                 g.setColor(dstPixel);
+                 g.fillRect(x, y, 1, 1);
                 for (int i = -1; i < 2 && x + i < image.getWidth() && x + i
                         >= 0; i++) {
                     for (int j = 0; j < 2 && y + j < image.getHeight(); j++) {
@@ -150,10 +147,10 @@ public class FloydSteinbergDither
                                     & 0xff,
                                     channels[2] & 0xff,
                                     targetPixel.getAlpha());
-                            // g.setColor(pixelColor);
-                            // g.drawRect(x + i, y + j, 1, 1);
-                            imgCopy.setRGB(x + i, y + j,
-                                    pixelColor.getRGB());
+                             g.setColor(pixelColor);
+                             g.fillRect(x + i, y + j, 1, 1);
+//                            imgCopy.setRGB(x + i, y + j,
+//                                    pixelColor.getRGB());
                         } catch (IllegalArgumentException e) {
                             System.out.println((channels[0] & 0xff) + " " + channels[1] +
                                     " "
@@ -234,6 +231,16 @@ public class FloydSteinbergDither
                 new Color(87, 54, 45),
                 new Color(121, 72, 72)
         };
+//    	Color[] colors = {
+//       		 new Color(  0,   0,   0),
+//       	        new Color(  0,   0, 255),
+//       	        new Color(  0, 255,   0),
+//       	        new Color(  0, 255, 255),
+//       	        new Color(255,   0,   0),
+//       	        new Color(255,   0, 255),
+//       	        new Color(255, 255,   0),
+//       	        new Color(255, 255, 255)
+//       };
         // Color colors[] = {
         // Color.BLACK,
         // Color.WHITE
@@ -242,7 +249,7 @@ public class FloydSteinbergDither
         // byte[][] result = floydSteinbergDither(image, palette);
         File sourceFile = new File("input.bmp");
         BufferedImage imgSrc = ImageIO.read(sourceFile);
-        BufferedImage output = fsd.transform(imgSrc);
+                BufferedImage output = fsd.transform(imgSrc);
         saveImage(output);
 
     }
