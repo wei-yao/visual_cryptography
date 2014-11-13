@@ -121,8 +121,8 @@ public class FloydSteinbergDither
                 BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = imgCopy.createGraphics();
         g.drawImage(image, 0, 0, null);
-        int count = 0;
-        int countW = 0;
+        // int count = 0;
+        // int countW = 0;
         for (int y = 0; y < image.getHeight(); y++) {
             for (int x = 0; x < image.getWidth(); x++) {
 

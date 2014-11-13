@@ -1,4 +1,4 @@
-package com.example.visualcryptography;
+package com.example.ui;
 import java.io.IOException;
 
 
