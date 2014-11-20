@@ -109,7 +109,7 @@ public class FloydSteinbergDither
     }
 
     /**
-     * 用 Floyd–Steinberg dithering 算法转化图像.
+     * 用 Floyd–Steinberg dithering 算法转化图像,原图不会被改变.
      * 
      * @param image
      * @return 转化后的图像.
@@ -266,7 +266,7 @@ public class FloydSteinbergDither
     }
 
     /**
-     * 将一幅图像按照指定的参数转换.
+     * 将一幅图像按照指定的参数转换,不会修改原图..
      * 
      * @param image
      * @return
