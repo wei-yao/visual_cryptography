@@ -113,21 +113,50 @@ public class Matrix {
         }
         Random random = new Random();
         int next;
-        // int permute[] = {
-        // 1, 1, 3, 3
-        // };
+        int permute[] = generatePermuteSequence(COLUMN_COUNT);
+
         for (int j = 0; j < COLUMN_COUNT; j++) {
-            next = random.nextInt(COLUMN_COUNT);
-            // next = permute[j];
+            // next = random.nextInt(COLUMN_COUNT);
+            next = permute[j];
+            // if (next != j) {
+            // for (int i = 0; i < matrix.length; i++) {
+            // output[i][j] = matrix[i][next];
+            // output[i][next] = matrix[i][j];
+            // }
+            // }
+
             if (next != j) {
                 for (int i = 0; i < matrix.length; i++) {
                     output[i][j] = matrix[i][next];
-                    output[i][next] = matrix[i][j];
                 }
             }
         }
 
         return new Matrix(inputMatrix.getP(), inputMatrix.getRows(), output);
+    }
+
+    /**
+     * 随机产生一个排列，用于混淆.
+     * 
+     * @param size
+     * @return
+     */
+    private static int[] generatePermuteSequence(final int size) {
+        Random random = new Random();
+        int[] ret = new int[size];
+        for (int i = 0; i < size; i++) {
+            ret[i] = i;
+        }
+        int next;
+        for (int i = 0; i < size; i++) {
+            next = random.nextInt(size);
+            if (next != i) {
+                int temp = ret[next];
+                ret[next] = ret[i];
+                ret[i] = temp;
+            }
+        }
+        return ret;
     }
 
     @Override
