@@ -73,6 +73,12 @@ public class VisualCryptography {
         return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
     }
 
+    /**
+     * 视觉密码的主处理程序.
+     * 
+     * @throws IOException
+     * @throws FormatErrorException
+     */
     public void process() throws IOException, FormatErrorException {
         images = halfTone(images);
         images = preprocessing(images);
