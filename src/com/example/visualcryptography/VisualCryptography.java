@@ -63,7 +63,8 @@ public class VisualCryptography {
     }
 
     private boolean checkType(final int type) {
-        return (type == BufferedImage.TYPE_BYTE_GRAY);
+        return true;
+        // return (type == BufferedImage.TYPE_BYTE_GRAY);
     }
 
     static BufferedImage deepCopy(final BufferedImage bi) {
