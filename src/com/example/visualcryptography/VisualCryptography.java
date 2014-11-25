@@ -319,7 +319,7 @@ public class VisualCryptography {
         File parent = new File("srcImage");
         File[] files = new File[IMAGE_COUNT];
         for (int i = 0; i < files.length; i++) {
-            files[i] = new File(parent, i + ".bmp");
+            files[i] = new File(parent, i + ".png");
         }
         try {
             VisualCryptography vc = new VisualCryptography(files);
