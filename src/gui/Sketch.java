@@ -4,8 +4,11 @@ import processing.core.PImage;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
 
-public class MySketch extends PApplet {
+import com.example.visualcryptography.FormatErrorException;
+
+public class Sketch extends PApplet {
 
     /**
      * 
@@ -32,14 +35,18 @@ public class MySketch extends PApplet {
     }
 
     public void mousePressed() {
-    	mainFrame.onMouseClick(mouseX, mouseY);
+    	try {
+			mainFrame.onMouseClick(mouseX, mouseY);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     	}
     public void fileSelected(File selectFile){
 		mainFrame.fileSelected(selectFile);
 	}
     public static void main(final String args[]) {
         PApplet.main(new String[] {
-                "--present", "gui.MySketch"
+                "--present", "gui.Sketch"
         });
     }
 }

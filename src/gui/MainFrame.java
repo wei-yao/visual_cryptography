@@ -2,7 +2,11 @@ package gui;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
 import java.rmi.server.Skeleton;
+
+import com.example.visualcryptography.FormatErrorException;
+import com.example.visualcryptography.VisualCryptography;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -17,7 +21,7 @@ public class MainFrame {
 
 	private static final int OUTPUT_IMG_ID = 5;
 	private PApplet pApplet;
-	private boolean isOverlayed[] = new boolean[4];
+	private boolean isOverlayed[] = new boolean[5];
 	private boolean isLoaded[] = new boolean[5];
 
 	public MainFrame(PApplet applet) {
@@ -29,25 +33,21 @@ public class MainFrame {
 		}
 
 		for (int i = 0; i < 5; i++)
-			imgs[i] = new PImage(MySketch.DEFAULT_SIZE, MySketch.DEFAULT_SIZE);
+			imgs[i] = new PImage(Sketch.DEFAULT_SIZE, Sketch.DEFAULT_SIZE);
 	}
+	
 
 	private void initializeImagePos() {
 		imagePos = new int[5][2];
-		imagePos[0][0] = MySketch.PADDING;
-		imagePos[0][1] = MySketch.PADDING;
-		imagePos[1][0] = imagePos[0][0];
-		imagePos[4][1] = imagePos[3][1] = imagePos[2][1] = imagePos[1][1] = imagePos[0][1]
-				+ MySketch.DEFAULT_SIZE
-				+ MySketch.PADDING
-				* 2
-				+ MySketch.BUTTON_HEIGHT;
-		imagePos[2][0] = imagePos[1][0] + MySketch.DEFAULT_SIZE
-				+ MySketch.PADDING;
-		imagePos[3][0] = imagePos[2][0] + MySketch.DEFAULT_SIZE
-				+ MySketch.PADDING;
-		imagePos[4][0] = imagePos[3][0] + MySketch.DEFAULT_SIZE
-				+ MySketch.PADDING;
+		imagePos[3][0] = imagePos[1][0] = Sketch.PADDING;
+		imagePos[4][0]=imagePos[2][0]=imagePos[1][0]+Sketch.PADDING+Sketch.DEFAULT_SIZE;
+		imagePos[2][1]=imagePos[1][1] = Sketch.PADDING;
+		imagePos[0][1]=imagePos[4][1]=imagePos[3][1] = imagePos[1][1]
+					+ Sketch.DEFAULT_SIZE
+					+ Sketch.PADDING
+					* 2
+					+ Sketch.BUTTON_HEIGHT;
+		imagePos[0][0]=imagePos[4][0]+Sketch.PADDING+Sketch.DEFAULT_SIZE;
 	}
 
 	/**
@@ -69,10 +69,10 @@ public class MainFrame {
 		// buttonPos[4][0] = buttonPos[3][0] + MySketch.PADDING
 		// + MySketch.DEFAULT_SIZE;
 		for (int i = 0; i < buttonPos.length; i++) {
-			buttonPos[i][0] = imagePos[i][0] + MySketch.DEFAULT_SIZE / 2
-					- MySketch.BUTTON_WIDTH / 2;
-			buttonPos[i][1] = imagePos[i][1] + MySketch.DEFAULT_SIZE
-					+ MySketch.PADDING;
+			buttonPos[i][0] = imagePos[i][0] + Sketch.DEFAULT_SIZE / 2
+					- Sketch.BUTTON_WIDTH / 2;
+			buttonPos[i][1] = imagePos[i][1] + Sketch.DEFAULT_SIZE
+					+ Sketch.PADDING;
 		}
 	}
 
@@ -97,13 +97,21 @@ public class MainFrame {
 		resetImage(imgs[id]);
 		isLoaded[id] = false;
 		if (id != 0)
-			isOverlayed[id - 1] = false;
+			isOverlayed[id ] = false;
 	}
 	
 	public void draw() {
 		for (int i = 0; i < 5; i++) {
+			if(isLoaded[i])
 			pApplet.image(imgs[i], imagePos[i][0], imagePos[i][1],
-					MySketch.DEFAULT_SIZE, MySketch.DEFAULT_SIZE);
+					Sketch.DEFAULT_SIZE, Sketch.DEFAULT_SIZE);
+			else
+			{
+				pApplet.fill(255,255);
+				pApplet.rect(imagePos[i][0], imagePos[i][1], Sketch.DEFAULT_SIZE,
+						Sketch.DEFAULT_SIZE);
+			}
+				
 		}
 //		pApplet.fill(255,255);
 //		pApplet.rect(RESULT_X, RESULT_Y, MySketch.OUTPUT_SIZE,
@@ -117,14 +125,14 @@ public class MainFrame {
 	
 	private void drawButtons() {
 		pApplet.stroke(255);
-		pApplet.fill(MySketch.FILL_COLOR);
+		pApplet.fill(Sketch.FILL_COLOR);
 		for (int i = 0; i < 5; i++) {
 			pApplet.rect(buttonPos[i][0], buttonPos[i][1],
-					MySketch.BUTTON_WIDTH, MySketch.BUTTON_HEIGHT);
+					Sketch.BUTTON_WIDTH, Sketch.BUTTON_HEIGHT);
 		}
 	}
 
-	public void onMouseClick(int mouseX, int mouseY) {
+	public void onMouseClick(int mouseX, int mouseY) throws  IOException {
 		int buttonid = getButtonId(mouseX, mouseY);
 		if (buttonid != -1) {
 			selectButton = buttonid;
@@ -154,26 +162,34 @@ public class MainFrame {
 	 * 处理载体图片被点中.
 	 */
 	private void handleCarrierImageClick(int id) {
-		if (isLoaded[id] && !isOverlayed[id-1]) {
+		if(isLoaded[id]){
+//		if (isLoaded[id] && !isOverlayed[id-1]) {
 //			overlayImage(id);
-			isOverlayed[id-1]=true;
+			isOverlayed[id]=!isOverlayed[id];
+//		}
 		}
 	}
 
 	private void overlayImages() {
 		boolean isFirst=true;
+		
 		for(int id=1;id<5;id++){
-		if(isOverlayed[id-1])
+		if(isOverlayed[id])
 			if(isFirst)
 			{
-			pApplet.image(imgs[id], RESULT_X, RESULT_Y,MySketch.OUTPUT_SIZE, MySketch.OUTPUT_SIZE);	
+			pApplet.image(imgs[id], RESULT_X, RESULT_Y,Sketch.OUTPUT_SIZE, Sketch.OUTPUT_SIZE);	
 			isFirst=false;
 			}else
 			{
 			pApplet.blend(imgs[id], 0, 0,
 				imgs[id].width, imgs[id].height, RESULT_X, RESULT_Y,
-				MySketch.OUTPUT_SIZE, MySketch.OUTPUT_SIZE, PApplet.BURN);
+				Sketch.OUTPUT_SIZE, Sketch.OUTPUT_SIZE, PApplet.BURN);
 		}
+		}
+		//如果没有图片叠加，填充白色，直接用白色作为初值blend有问题.
+		if(isFirst){
+			pApplet.fill(255);
+			pApplet.rect(RESULT_X, RESULT_Y,Sketch.OUTPUT_SIZE, Sketch.OUTPUT_SIZE);
 		}
 	}
 
@@ -189,22 +205,37 @@ public class MainFrame {
 		}
 //		resetImage(overlayResult);
 	}
-
-	private void onSrcImageClick() {
+/**
+ * 应该重新生成并重新加载.
+ * @throws IOException 
+ * @throws FormatErrorException 
+ */
+	private void onSrcImageClick() throws IOException {
 		if (isAllLoaded()) {
 			for (int i = 1; i < 5; i++)
-				resetInputImage(i);
+//				resetInputImage(i);
 //			resetImage(overlayResult);
+				try{
 			proceed();
+				}catch(FormatErrorException e){
+					e.printStackTrace();
+				}
 		}
 	}
 
 	/**
 	 * 运行视觉密码的算法.
+	 * @throws IOException 
+	 * @throws FormatErrorException 
 	 */
-	private void proceed() {
-
-	}
+	private void proceed() throws FormatErrorException, IOException {
+		VisualCryptography vc=new VisualCryptography(loadFiles);
+		File[] files=vc.process();
+		for(int i=0;i<4;i++)
+		{
+		readCarrierImage(files[i], i+1);
+		}
+		}
 
 	private boolean isAllLoaded() {
 		for (boolean b : isLoaded)
@@ -212,6 +243,13 @@ public class MainFrame {
 				return false;
 		return true;
 	}
+	private void readCarrierImage(File file,int id){
+		imgs[id] = pApplet.loadImage(file.getAbsolutePath());
+		isLoaded[id] = true;
+		loadFiles[id]=file;
+		isOverlayed[id]=false;
+	}
+
 
 	/**
 	 * 初始化image对象.
@@ -226,21 +264,22 @@ public class MainFrame {
 	private static final int SOURCE_IMG_ID = 0;
 	private int selectButton;
 	PImage[] imgs = new PImage[5];
-	/**
-	 * 标志四张图片有没有没叠加过.
-	 */
-	boolean[] overlayImages = new boolean[4];
+//	/**
+//	 * 标志四张图片有没有没叠加过.
+//	 */
+//	boolean[] overlayImages = new boolean[4];
 //	private PImage overlayResult = new PImage(MySketch.OUTPUT_SIZE,
 //			MySketch.OUTPUT_SIZE);
-	private static final int RESULT_X = MySketch.PADDING * 4
-			+ MySketch.DEFAULT_SIZE * 3;
-	private static final int RESULT_Y = MySketch.PADDING;
+	private static final int RESULT_X = Sketch.PADDING * 4
+			+ Sketch.DEFAULT_SIZE * 3;
+	private static final int RESULT_Y = Sketch.PADDING;
 
 	public void fileSelected(File selectFile) {
 		imgs[selectButton] = pApplet.loadImage(selectFile.getAbsolutePath());
 		isLoaded[selectButton] = true;
+		loadFiles[selectButton]=selectFile;
 	}
-
+	private File[] loadFiles=new File[5];
 	public static boolean isOverRect(int x, int y, int rx, int ry, int width,
 			int height) {
 		return ((x >= rx && x <= rx + width) && (y >= ry & y <= ry + height));
@@ -248,7 +287,7 @@ public class MainFrame {
 
 	private boolean isOverButton(int x, int y, int buttonId) {
 		return isOverRect(x, y, buttonPos[buttonId][0], buttonPos[buttonId][1],
-				MySketch.BUTTON_WIDTH, MySketch.BUTTON_HEIGHT);
+				Sketch.BUTTON_WIDTH, Sketch.BUTTON_HEIGHT);
 	}
 
 	private static final int SRC_BUTTON_ID = 0;
@@ -288,12 +327,12 @@ public class MainFrame {
 		if (id == 5) {
 			imagex = RESULT_X;
 			imagey = RESULT_Y;
-			width = MySketch.OUTPUT_SIZE;
-			height = MySketch.OUTPUT_SIZE;
+			width = Sketch.OUTPUT_SIZE;
+			height = Sketch.OUTPUT_SIZE;
 		} else {
 			imagex = imagePos[id][0];
 			imagey = imagePos[id][1];
-			width = height = MySketch.DEFAULT_SIZE;
+			width = height = Sketch.DEFAULT_SIZE;
 		}
 
 		return isOverRect(x, y, imagex, imagey, width, height);

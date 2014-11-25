@@ -28,7 +28,12 @@ public class VisualCryptography {
     private BufferedImage[] images;
 
     // private File[] files;
-
+/**
+ * 构造函数是传入一个图像的file 数组，第一个元素是要共享的图片，其他的图片是载体图片.
+ * @param files
+ * @throws FormatErrorException
+ * @throws IOException
+ */
     public VisualCryptography(final File[] files) throws FormatErrorException, IOException {
         if (files.length != IMAGE_COUNT) {
             throw new FormatErrorException("file lenght is not 5");
@@ -37,7 +42,9 @@ public class VisualCryptography {
         readImages(files);
         // System.arraycopy(files, 0, this.files, 0, files.length);
     }
-
+    private VisualCryptography(){
+    	
+    }
     /**
      * 读取图片.
      * 
@@ -76,23 +83,25 @@ public class VisualCryptography {
 
     /**
      * 视觉密码的主处理程序.
-     * 
+     * 返回载有秘密的载体图片文件对象数组.
      * @throws IOException
      * @throws FormatErrorException
      */
-    public void process() throws IOException, FormatErrorException {
+    public File[] process() throws IOException, FormatErrorException {
         images = halfTone(images);
         images = preprocessing(images);
         Matrix[] basisMatrixs = createBasisMatrixs(ROW_COUNT);
         BufferedImage[] output;
         output = distribute(basisMatrixs, images);
-        savePaticipantsImages(output);
+       
         // BufferedImage[] permuteOutput = new BufferedImage[4];
         // for (int i = 0; i < 4; i++) {
         // permuteOutput[i] = output[3 - i];
         // }
         BufferedImage[] overlayImages = progressiveOverlay(output);
         saveOverlayImages(overlayImages);
+        return savePaticipantsImages(output);
+        
     }
 
     /**
@@ -281,15 +290,19 @@ public class VisualCryptography {
         return ret;
     }
 
-    private void savePaticipantsImages(final BufferedImage[] images) throws IOException {
+    private File[] savePaticipantsImages(final BufferedImage[] images) throws IOException {
         int i = 0;
         File parent = new File("paticipants");
         if (!parent.exists()) {
             parent.mkdir();
         }
+        File files[]=new File[IMAGE_COUNT-1];
         for (BufferedImage img : images) {
-            saveImage(img, new File(parent, (i++) + ".png"));
+        	files[i]=new File(parent, (i) + ".png");
+            saveImage(img, files[i]);
+            i++;
         }
+        return files;
     }
 
     private void saveOverlayImages(final BufferedImage[] images) throws IOException {
