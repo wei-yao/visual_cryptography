@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Color;
 import java.io.File;
+import java.rmi.server.Skeleton;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -77,7 +78,7 @@ public class MainFrame {
 
 	public void setup() {
 		resetAllImages();
-		pApplet.background(Color.BLACK.getRGB());
+		pApplet.background(0);
 	}
 
 	private void resetAllImages() {
@@ -113,10 +114,10 @@ public class MainFrame {
 		drawButtons();
 
 	}
-
+	
 	private void drawButtons() {
 		pApplet.stroke(255);
-		pApplet.fill(255);
+		pApplet.fill(MySketch.FILL_COLOR);
 		for (int i = 0; i < 5; i++) {
 			pApplet.rect(buttonPos[i][0], buttonPos[i][1],
 					MySketch.BUTTON_WIDTH, MySketch.BUTTON_HEIGHT);
@@ -169,7 +170,7 @@ public class MainFrame {
 			isFirst=false;
 			}else
 			{
-			pApplet.blend(imgs[id], imagePos[id][0], imagePos[id][1],
+			pApplet.blend(imgs[id], 0, 0,
 				imgs[id].width, imgs[id].height, RESULT_X, RESULT_Y,
 				MySketch.OUTPUT_SIZE, MySketch.OUTPUT_SIZE, PApplet.BURN);
 		}
