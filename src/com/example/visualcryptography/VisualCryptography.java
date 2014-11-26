@@ -350,13 +350,22 @@ public class VisualCryptography {
         ImageIO.write(output, "png", outFile);
     }
 
-    public static final int INPUT_IMAGE_COUNT = 7;
+    /**
+     * this is the input image count, one original image plus carrier images. if
+     * the carrier image count increase ,you can mod this field.
+     */
+    public static final int INPUT_IMAGE_COUNT = 5;
+    /**
+     * the extension of the input images.
+     */
+    private static final String EXTENSION = ".bmp";
 
     public static void main(final String[] args) {
+        // read input image .
         File parent = new File("srcImage");
         File[] files = new File[INPUT_IMAGE_COUNT];
         for (int i = 0; i < files.length; i++) {
-            files[i] = new File(parent, i + ".bmp");
+            files[i] = new File(parent, i + EXTENSION);
         }
         try {
             VisualCryptography vc = new VisualCryptography(files);
