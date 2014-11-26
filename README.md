@@ -33,7 +33,7 @@ There are two ways to run :
 
 The little button below images is used to select input image.
 image 5 is source image,and image 1 to 4 is carrier image,image 6 is overlay result,which is twice the size of
-image 1.The limitation of images is as above ，and the 128*128 image input  will get best visual performance.
+image 1.The limitation of images is as above ，and the 256*256 image input  will get best visual performance.
 
 After load 5 images ,click image 5 to run the visual cryptography algorithm ,and the image 1-4 will change .
 Click image 1-4 to overlay image. click one image to add it to the overlay result,and click two times to remove from the result.
