@@ -6,7 +6,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 /**
- * 预处理类，负责halftone图片的预处理.
+ * 预处理类，负责halftone图片的预处理. extend the image width and height by two times
  * 
  * @author weiyao
  */

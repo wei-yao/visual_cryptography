@@ -17,34 +17,51 @@ import javax.imageio.ImageIO;
  */
 public class VisualCryptography {
     /**
-     * 原图片与四张隐写图片，一共5张.
+     * 生成矩阵的列数.
      */
-    private static final int IMAGE_COUNT = 5;
-    public static final int ROW_COUNT = 4;
+    public static final int COLUMN_COUNT = 4;
+    /**
+     * 原图片与四张隐写图片 的最小张数.
+     */
+    private static final int MIN_IMAGE_COUNT = COLUMN_COUNT + 1;
+    /**
+     * 最大图片数量.
+     */
+    private static final int MAX_IMAGE_COUNT = 8 * Integer.BYTES;
     // private BufferedImage originImage;
     /**
      * 原图片与载体图片数组.
      */
     private BufferedImage[] images;
+    /**
+     * 载体图片的数量.
+     */
+    private int carrierCount;
 
     // private File[] files;
-/**
- * 构造函数是传入一个图像的file 数组，第一个元素是要共享的图片，其他的图片是载体图片.
- * @param files
- * @throws FormatErrorException
- * @throws IOException
- */
+    /**
+     * 构造函数是传入一个图像的file 数组，第一个元素是要共享的图片，其他的图片是载体图片.
+     * 
+     * @param files
+     * @throws FormatErrorException
+     * @throws IOException
+     */
     public VisualCryptography(final File[] files) throws FormatErrorException, IOException {
-        if (files.length != IMAGE_COUNT) {
-            throw new FormatErrorException("file lenght is not 5");
+        if (files.length < MIN_IMAGE_COUNT) {
+            throw new FormatErrorException("file lenght is less than " + MIN_IMAGE_COUNT);
+        } else if (files.length > MAX_IMAGE_COUNT) {
+            throw new FormatErrorException("file lenght is larger than " + MAX_IMAGE_COUNT);
         }
-        images = new BufferedImage[IMAGE_COUNT];
+        carrierCount = files.length;
+        images = new BufferedImage[files.length];
         readImages(files);
         // System.arraycopy(files, 0, this.files, 0, files.length);
     }
-    private VisualCryptography(){
-    	
+
+    private VisualCryptography() {
+
     }
+
     /**
      * 读取图片.
      * 
@@ -57,7 +74,7 @@ public class VisualCryptography {
         // if (!checkType(originImage.getType())) {
         // throw new FormatErrorException("type mismatch");
         // }
-        for (int i = 0; i < IMAGE_COUNT; i++) {
+        for (int i = 0; i < files.length; i++) {
             images[i] = ImageIO.read(files[i]);
             if (images[i].getWidth() != images[0].getWidth()
                     || images[i].getHeight() != images[0].getHeight()) {
@@ -82,18 +99,18 @@ public class VisualCryptography {
     }
 
     /**
-     * 视觉密码的主处理程序.
-     * 返回载有秘密的载体图片文件对象数组.
+     * 视觉密码的主处理程序. 返回载有秘密的载体图片文件对象数组.
+     * 
      * @throws IOException
      * @throws FormatErrorException
      */
     public File[] process() throws IOException, FormatErrorException {
         images = halfTone(images);
         images = preprocessing(images);
-        Matrix[] basisMatrixs = createBasisMatrixs(ROW_COUNT);
+        Matrix[] basisMatrixs = createBasisMatrixs(carrierCount);
         BufferedImage[] output;
         output = distribute(basisMatrixs, images);
-       
+
         // BufferedImage[] permuteOutput = new BufferedImage[4];
         // for (int i = 0; i < 4; i++) {
         // permuteOutput[i] = output[3 - i];
@@ -101,7 +118,7 @@ public class VisualCryptography {
         BufferedImage[] overlayImages = progressiveOverlay(output);
         saveOverlayImages(overlayImages);
         return savePaticipantsImages(output);
-        
+
     }
 
     /**
@@ -148,6 +165,9 @@ public class VisualCryptography {
         return output;
     }
 
+    /**
+     * 控制生成矩阵是否使用列混淆.
+     */
     private static final boolean USE_PERMUTE = true;
 
     /**
@@ -157,27 +177,27 @@ public class VisualCryptography {
      */
     private BufferedImage[] distribute(final Matrix[] basisMatrixs,
             final BufferedImage[] inputImages) {
-        BufferedImage[] output = new BufferedImage[ROW_COUNT];
+        BufferedImage[] output = new BufferedImage[inputImages.length - 1];
         System.arraycopy(inputImages, 1, output, 0, output.length);
         final int width = output[0].getWidth();
         final int height = output[0].getHeight();
-        byte[] rows = new byte[IMAGE_COUNT];
+        final int count = inputImages.length;
+        byte[] params = new byte[count];
         for (int j = 0; j < height; j += 2) {
             for (int i = 0; i < width; i += 2) {
-                for (int k = 0; k < IMAGE_COUNT; k++) {
+                for (int k = 0; k < count; k++) {
                     if (inputImages[k].getRGB(i, j) == Color.BLACK.getRGB()) {
-                        rows[k] = Matrix.BLACK;
+                        params[k] = Matrix.BLACK;
                     } else {
-                        rows[k] = Matrix.WHITE;
+                        params[k] = Matrix.WHITE;
                     }
                 }
-                Matrix matrix = getSelectedMatrixs(basisMatrixs, rows);
-                // 混淆使分配的图可辨识度降低.
+                Matrix matrix = getSelectedMatrixs(basisMatrixs, params);
                 if (USE_PERMUTE) {
                     matrix = Matrix.permuteColumns(matrix);
                 }
                 byte[][] byteMatrix = matrix.getMatrix();
-                for (int k = 0; k < ROW_COUNT; k++) {
+                for (int k = 0; k < count - 1; k++) {
                     output[k].setRGB(i, j, getRGB(byteMatrix[k][0]));
                     output[k].setRGB(i + 1, j, getRGB(byteMatrix[k][1]));
                     output[k].setRGB(i, j + 1, getRGB(byteMatrix[k][2]));
@@ -197,7 +217,8 @@ public class VisualCryptography {
     }
 
     /**
-     * 根据参数得出对应的基本矩阵.
+     * 根据参数得出对应的基本矩阵.几个参数 p,C1,C2...,Cn-1被当作各个位的值得出索引. 例如： 1，0，0，0，1
+     * ，将会计算得到0x11,作为索引提取基本数组.
      * 
      * @param basisMatrixs
      * @param paras
@@ -252,7 +273,7 @@ public class VisualCryptography {
     }
 
     /**
-     * 输入一个整数i，提取它的0-size 位作为输出.
+     * 输入一个整数i，提取它的从末尾0-size 位作为输出.
      * 
      * @param size 参数的个数
      * @param i 输入
@@ -272,19 +293,19 @@ public class VisualCryptography {
     }
 
     private BufferedImage[] preprocessing(final BufferedImage[] inputImages) {
-        BufferedImage[] ret = new BufferedImage[IMAGE_COUNT];
+        BufferedImage[] ret = new BufferedImage[inputImages.length];
         Preprocessor processor = new Preprocessor();
-        for (int i = 0; i < IMAGE_COUNT; i++) {
+        for (int i = 0; i < inputImages.length; i++) {
             ret[i] = processor.preprocess(inputImages[i]);
         }
         return ret;
     }
 
     private BufferedImage[] halfTone(final BufferedImage[] images) {
-        BufferedImage[] ret = new BufferedImage[IMAGE_COUNT];
+        BufferedImage[] ret = new BufferedImage[images.length];
         FloydSteinbergDither fsd = new FloydSteinbergDither(FloydSteinbergDither.BINARY_PALETTE,
                 BufferedImage.TYPE_BYTE_BINARY);
-        for (int i = 0; i < IMAGE_COUNT; i++) {
+        for (int i = 0; i < images.length; i++) {
             ret[i] = fsd.transform(images[i]);
         }
         return ret;
@@ -296,9 +317,9 @@ public class VisualCryptography {
         if (!parent.exists()) {
             parent.mkdir();
         }
-        File files[]=new File[IMAGE_COUNT-1];
+        File files[] = new File[images.length];
         for (BufferedImage img : images) {
-        	files[i]=new File(parent, (i) + ".png");
+            files[i] = new File(parent, (i) + ".png");
             saveImage(img, files[i]);
             i++;
         }
@@ -328,11 +349,13 @@ public class VisualCryptography {
         ImageIO.write(output, "png", outFile);
     }
 
+    public static final int INPUT_IMAGE_COUNT = 5;
+
     public static void main(final String[] args) {
         File parent = new File("srcImage");
-        File[] files = new File[IMAGE_COUNT];
+        File[] files = new File[INPUT_IMAGE_COUNT];
         for (int i = 0; i < files.length; i++) {
-            files[i] = new File(parent, i + ".png");
+            files[i] = new File(parent, i + ".bmp");
         }
         try {
             VisualCryptography vc = new VisualCryptography(files);

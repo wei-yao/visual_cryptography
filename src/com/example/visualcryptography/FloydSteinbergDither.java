@@ -24,13 +24,11 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-//class RGBTriple {
-//    public final byte[] channels;
-//    public RGBTriple() { channels = new byte[3]; }
-//    public RGBTriple(int R, int G, int B)
-//    { channels = new byte[]{(byte)R, (byte)G, (byte)B}; }
-//}
-
+/**
+ * the class use to halftone a image
+ * 
+ * @author weiyao
+ */
 public class FloydSteinbergDither
 {
     /**

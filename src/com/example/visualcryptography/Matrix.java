@@ -16,10 +16,11 @@ public class Matrix {
      * white是数组的默认值.
      */
     public static final byte WHITE = 0;
-    /**
-     * 矩阵行的数量，即分发的图片的数量.
-     */
-    private static final int ROW_COUNT = VisualCryptography.ROW_COUNT;
+
+    // /**
+    // * 矩阵行的数量，即分发的图片的数量.
+    // */
+    // private static final int ROW_COUNT = VisualCryptography.COLUMN_COUNT;
 
     /**
      * @param p
@@ -197,21 +198,21 @@ public class Matrix {
      * 生成基本矩阵.
      * 
      * @param p 合成色.
-     * @param rows 行色值的数组.
+     * @param C 行色值的数组. C0,C1,C2 .... Cn-1
      * @return 返回生成的基本矩阵.
      * @throws FormatErrorException
      */
-    public static Matrix generateBasisMatrix(final byte p, final byte[] rows)
+    public static Matrix generateBasisMatrix(final byte p, final byte[] C)
             throws FormatErrorException {
-        checkRowCount(rows.length);
+        checkRowCount(C.length);
         byte[][] output;
         // = new byte[rows.length][COLUMN_COUNT];
         if (p == BLACK) {
-            output = createBlackMatrix(rows);
+            output = createBlackMatrix(C);
         } else {
-            output = createWhiteMatrix(rows);
+            output = createWhiteMatrix(C);
         }
-        return new Matrix(p, rows, output);
+        return new Matrix(p, C, output);
     }
 
     /**
