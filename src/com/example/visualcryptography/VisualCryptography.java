@@ -52,7 +52,7 @@ public class VisualCryptography {
         } else if (files.length > MAX_IMAGE_COUNT) {
             throw new FormatErrorException("file lenght is larger than " + MAX_IMAGE_COUNT);
         }
-        carrierCount = files.length;
+        carrierCount = files.length - 1;
         images = new BufferedImage[files.length];
         readImages(files);
         // System.arraycopy(files, 0, this.files, 0, files.length);
@@ -78,6 +78,7 @@ public class VisualCryptography {
             images[i] = ImageIO.read(files[i]);
             if (images[i].getWidth() != images[0].getWidth()
                     || images[i].getHeight() != images[0].getHeight()) {
+                int fa = 0;
                 throw new FormatErrorException("file size mismatch");
             }
             if (!checkType(images[i].getType())) {
@@ -349,7 +350,7 @@ public class VisualCryptography {
         ImageIO.write(output, "png", outFile);
     }
 
-    public static final int INPUT_IMAGE_COUNT = 5;
+    public static final int INPUT_IMAGE_COUNT = 7;
 
     public static void main(final String[] args) {
         File parent = new File("srcImage");

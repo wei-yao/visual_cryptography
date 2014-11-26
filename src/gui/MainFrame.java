@@ -224,15 +224,15 @@ public class MainFrame {
      */
     private void onSrcImageClick() throws IOException {
         if (isAllLoaded()) {
-            for (int i = 1; i < 5; i++) {
-                // resetInputImage(i);
-                // resetImage(overlayResult);
-                try {
-                    proceed();
-                } catch (FormatErrorException e) {
-                    e.printStackTrace();
-                }
+            // for (int i = 1; i < 5; i++) {
+            // resetInputImage(i);
+            // resetImage(overlayResult);
+            try {
+                proceed();
+            } catch (FormatErrorException e) {
+                e.printStackTrace();
             }
+            // }
         }
     }
 
