@@ -5,6 +5,7 @@ import com.example.visualcryptography.FormatErrorException;
 import com.example.visualcryptography.VisualCryptography;
 
 import processing.core.PApplet;
+import processing.core.PFont;
 import processing.core.PImage;
 
 import java.io.File;
@@ -80,8 +81,8 @@ public class MainFrame {
 
     public void setup() {
         resetAllImages();
-        pApplet.background(0);
-        // f = pApplet.createFont("Arial", 25, true);
+        // pApplet.background(0);
+        f = pApplet.createFont("Arial", 25, true);
     }
 
     private void resetAllImages() {
@@ -105,6 +106,7 @@ public class MainFrame {
     }
 
     public void draw() {
+        pApplet.background(0);
         for (int i = 0; i < 5; i++) {
             if (isLoaded[i]) {
                 pApplet.image(imgs[i], imagePos[i][0], imagePos[i][1],
@@ -134,7 +136,38 @@ public class MainFrame {
     // pApplet.text("请选择原图", buttonPos[0][0], buttonPos[0][1]);
     // }
 
-    // private PFont f;
+    private PFont f;
+
+    /**
+     * 显示当前有哪些图片被叠加的提示.
+     */
+    private void showOverlayTips(final String str) {
+        int textX = RESULT_X + Sketch.OUTPUT_SIZE / 2;
+        int textY = RESULT_Y
+                + Sketch.OUTPUT_SIZE
+                + 3 * Sketch.PADDING;
+        // if (str.isEmpty()) {
+        // // erase
+        // eraseOverlayTips();
+        // } else {
+
+        pApplet.textFont(f);
+        pApplet.fill(255);
+        pApplet.textAlign(PApplet.CENTER);
+        pApplet.text(str, textX, textY);
+        // }
+
+    }
+
+    /**
+     * 擦除叠加的提示.
+     */
+    private void eraseOverlayTips() {
+        pApplet.noStroke();
+        pApplet.fill(0);
+        pApplet.rect(RESULT_X, RESULT_Y
+                + Sketch.OUTPUT_SIZE, Sketch.OUTPUT_SIZE, Sketch.PADDING * 3);
+    }
 
     private void drawButtons() {
         pApplet.stroke(255);
@@ -183,9 +216,10 @@ public class MainFrame {
 
     private void overlayImages() {
         boolean isFirst = true;
-
+        StringBuffer sb = new StringBuffer();
         for (int id = 1; id < 5; id++) {
             if (isOverlayed[id]) {
+                sb.append(" " + id);
                 if (isFirst)
                 {
                     pApplet.image(imgs[id], RESULT_X, RESULT_Y, Sketch.OUTPUT_SIZE,
@@ -199,6 +233,10 @@ public class MainFrame {
                 }
             }
         }
+        if (sb.length() != 0) {
+            sb.insert(0, "image overlayed ");
+        }
+        showOverlayTips(sb.toString());
         // 如果没有图片叠加，填充白色，直接用白色作为初值blend有问题.
         if (isFirst) {
             pApplet.fill(255);
